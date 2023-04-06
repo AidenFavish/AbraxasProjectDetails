@@ -18,6 +18,26 @@ chan = AnalogIn(ads, ADS.P0)
 
 print("{:>5}\t{:>5}".format('raw', 'v'))
 
+mem: [float] = []
+max_mem = 10
+average = 0.032
+
 while True:
     print("{:>5}\t{:>5.3f}".format(chan.value, chan.voltage))
+    print(f"average: {average}")
+
+    if chan.voltage - average:
+        exec(open("~/Desktop/AbraxasProject/AbraxasNotificationSystem/main.py").read())
+
+    if len(mem) < max_mem:
+        mem.append(chan.voltage)
+    else:
+        mem.remove(0)
+        mem.append(chan.voltage)
+
+    sum = 0
+    for i in mem:
+        sum += i
+    average = sum / len(mem)
+
     time.sleep(0.5)
